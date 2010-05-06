@@ -1,0 +1,7 @@
+entry = {
+  bundle = AppList;
+  cell = PSLinkCell;
+  icon = icon.png;
+  isController = 1;
+  label = FullForce;
+};
