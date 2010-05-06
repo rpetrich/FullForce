@@ -4,4 +4,7 @@ entry = {
   icon = icon.png;
   isController = 1;
   label = FullForce;
+  ALSettingsPath = "/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist";
+  ALSettingsKeyPrefix = "FFEnabled-";
+  ALChangeNotification = "com.booleanmagic.fullforce.settingschanged";
 };
