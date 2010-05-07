@@ -1,10 +1,13 @@
 Package: com.booleanmagic.fullforce
 Name: FullForce
 Depends: mobilesubstrate
-Version: 0.1
+Version: 1.0
 Architecture: iphoneos-arm
 Description: Force applications to show in iPad mode
-Maintainer: Ryan Petrich (rpetrich@gmail.com)
-Author: Ryan Petrich (rpetrich@gmail.com)
-Depends: applist
+Maintainer: Ryan Petrich <rpetrich@gmail.com>
+Author: Ryan Petrich <rpetrich@gmail.com>
+Depends: applist, gsc.wildcat
 Section: Tweaks
+Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=FullForceDp
+Website: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=FullForceDp
+dev: rpetrich
