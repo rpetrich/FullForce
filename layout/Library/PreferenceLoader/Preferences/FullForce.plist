@@ -7,4 +7,18 @@ entry = {
   ALSettingsPath = "/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist";
   ALSettingsKeyPrefix = "FFEnabled-";
   ALChangeNotification = "com.booleanmagic.fullforce.settingschanged";
+  ALSectionDescriptors = (
+  	{
+  	  title = "System Applications";
+  	  predicate = "(isSystemApplication = TRUE) AND (isActuallyClassic = TRUE)";
+  	  "cell-class-name" = "ALSwitchCell";
+  	  "icon-size" = 29;
+  	},
+  	{
+  	  title = "User Applications";
+  	  predicate = "(isSystemApplication = FALSE) AND (isActuallyClassic = TRUE)";
+  	  "cell-class-name" = "ALSwitchCell";
+  	  "icon-size" = 29;
+  	}
+  );
 };

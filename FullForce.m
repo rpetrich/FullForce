@@ -18,3 +18,8 @@ CHDeclareMethod(0, BOOL, SBApplication, isClassic)
 		return CHSuper(0, SBApplication, isClassic);
 	}
 }
+
+CHDeclareMethod(0, BOOL, SBApplication, isActuallyClassic)
+{
+	return CHSuper(0, SBApplication, isClassic);
+}
