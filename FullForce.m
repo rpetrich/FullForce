@@ -31,13 +31,16 @@ CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 {
 	CHSuper(0, UIApplication, _reportAppLaunchFinished);
 	UIWindow *keyWindow = [UIWindow keyWindow];
-	CGRect windowFrame = [keyWindow frame];
 	UIView *contentView = [keyWindow contentView];
-	CGRect contentFrame = [contentView frame];
-	if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
-		windowFrame.size = contentFrame.size;
-		[keyWindow setFrame:windowFrame];
-		[contentView setFrame:contentFrame];
+	if (contentView) {
+		CGRect windowFrame = [keyWindow frame];
+		CGRect contentFrame = [contentView frame];
+		if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
+			windowFrame.size.width = contentFrame.origin.x + contentFrame.size.width;
+			windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
+			[keyWindow setFrame:windowFrame];
+			[contentView setFrame:contentFrame];
+		}
 	}
 }
 
