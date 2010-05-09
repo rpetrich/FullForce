@@ -40,6 +40,13 @@ CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 			windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
 			[keyWindow setFrame:windowFrame];
 			[contentView setFrame:contentFrame];
+		} else if ((windowFrame.size.width == 320.0f) && (windowFrame.size.height == 480.0f)) {
+			CGRect screenBounds = [[UIScreen mainScreen] bounds];
+			windowFrame.size = screenBounds.size;
+			[keyWindow setFrame:windowFrame];
+			if ((contentFrame.size.width == 320.0f) && (contentFrame.size.height == 480.0f))
+				contentFrame.size = screenBounds.size;
+			[contentView setFrame:contentFrame];
 		}
 	}
 }
