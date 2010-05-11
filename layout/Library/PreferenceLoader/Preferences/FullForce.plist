@@ -1,7 +1,7 @@
 entry = {
   bundle = AppList;
   cell = PSLinkCell;
-  icon = icon.png;
+  icon = "/Library/PreferenceLoader/Preferences/FullForce.png";
   isController = 1;
   label = FullForce;
   ALSettingsPath = "/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist";
