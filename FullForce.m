@@ -4,6 +4,101 @@
 #import <SpringBoard/SpringBoard.h>
 #import <CaptainHook/CaptainHook.h>
 
+@protocol UIPopoverControllerDelegate;
+
+@interface UIPopoverController : NSObject
+
+- (id)initWithContentViewController:(UIViewController *)viewController;
+
+@property (nonatomic, assign) id <UIPopoverControllerDelegate> delegate;
+
+- (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view permittedArrowDirections:(NSInteger)arrowDirections animated:(BOOL)animated;
+- (void)dismissPopoverAnimated:(BOOL)animated;
+
+@end
+
+@protocol UIPopoverControllerDelegate <NSObject>
+@optional
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController;
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController;
+@end
+
+CHDeclareClass(UIPopoverController);
+
+__attribute__((visibility("hidden")))
+@interface FullForcePopoverManager : NSObject<UIPopoverControllerDelegate> {
+@private
+	UIViewController *_viewController;
+	UIImagePickerController *_pickerController;
+	UIPopoverController *_popoverController;
+}
+
+- (id)initWithViewController:(UIViewController *)viewController pickerController:(UIImagePickerController *)pickerController;
+- (void)show;
+- (void)dismissAnimated:(BOOL)animated;
+
+@end
+
+static FullForcePopoverManager *currentPopoverManager;
+
+@implementation FullForcePopoverManager
+
+- (id)initWithViewController:(UIViewController *)viewController pickerController:(UIImagePickerController *)pickerController
+{
+	if ((self = [super init])) {
+		_viewController = [viewController retain];
+		_pickerController = [pickerController retain];
+		_popoverController = [CHAlloc(UIPopoverController) initWithContentViewController:pickerController];
+		[_popoverController setDelegate:self];
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+	[_viewController release];
+	[_pickerController release];
+	[_popoverController setDelegate:nil];
+	[_popoverController release];
+	[super dealloc];
+}
+
+- (void)show
+{
+	[currentPopoverManager dismissAnimated:YES];
+	currentPopoverManager = [self retain];
+	UIView *view = [[[_viewController view] window] contentView];
+	CGRect bounds = [view bounds];
+	bounds.origin.y += bounds.size.height - 1.0f;
+	bounds.size.height = 1.0f;
+	bounds.origin.x += 10.0f;
+	bounds.size.width -= 20.0f;
+	[_popoverController presentPopoverFromRect:bounds inView:view permittedArrowDirections:0xf animated:YES];
+}
+
+- (void)dismissAnimated:(BOOL)animated
+{
+	[_popoverController dismissPopoverAnimated:animated];
+	[currentPopoverManager release];
+	currentPopoverManager = nil;
+}
+
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
+{
+	id<UIImagePickerControllerDelegate> delegate = [_pickerController delegate];
+	if ([delegate respondsToSelector:@selector(imagePickerControllerDidCancel:)])
+		[delegate imagePickerControllerDidCancel:_pickerController];
+	return NO;
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+	[currentPopoverManager release];
+	currentPopoverManager = nil;
+}
+
+@end
+
 CHDeclareClass(SBApplication);
 
 CHMethod(0, BOOL, SBApplication, isClassic)
@@ -25,6 +120,27 @@ CHMethod(0, BOOL, SBApplication, isActuallyClassic)
 	return CHSuper(0, SBApplication, isClassic);
 }
 
+CHDeclareClass(UIViewController);
+
+CHMethod(2, void, UIViewController, presentModalViewController, UIViewController *, viewController, animated, BOOL, animated)
+{
+	if ([viewController isKindOfClass:[UIImagePickerController class]]) {
+		FullForcePopoverManager *ffpm = [[FullForcePopoverManager alloc] initWithViewController:self pickerController:(UIImagePickerController *)viewController];
+		[ffpm show];
+		[ffpm release];
+	} else {
+		CHSuper(2, UIViewController, presentModalViewController, viewController, animated, animated);
+	}
+}
+
+CHMethod(1, void, UIViewController, dismissModalViewControllerAnimated, BOOL, animated)
+{
+	if (currentPopoverManager)
+		[currentPopoverManager dismissAnimated:YES];
+	else
+		CHSuper(1, UIViewController, dismissModalViewControllerAnimated, animated);
+}
+
 CHDeclareClass(UIApplication);
 
 CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
@@ -32,6 +148,10 @@ CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
 	if (value) {
+		CHLoadLateClass(UIPopoverController);
+		CHLoadClass(UIViewController);
+		CHHook(2, UIViewController, presentModalViewController, animated);
+		CHHook(1, UIViewController, dismissModalViewControllerAnimated);
 		CHSuper(0, UIApplication, _reportAppLaunchFinished);
 		UIWindow *keyWindow = [UIWindow keyWindow];
 		UIView *contentView = [keyWindow contentView];
