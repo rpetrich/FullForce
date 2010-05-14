@@ -29,25 +29,31 @@ CHDeclareClass(UIApplication);
 
 CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 {
-	CHSuper(0, UIApplication, _reportAppLaunchFinished);
-	UIWindow *keyWindow = [UIWindow keyWindow];
-	UIView *contentView = [keyWindow contentView];
-	if (contentView) {
-		CGRect windowFrame = [keyWindow frame];
-		CGRect contentFrame = [contentView frame];
-		if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
-			windowFrame.size.width = contentFrame.origin.x + contentFrame.size.width;
-			windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
-			[keyWindow setFrame:windowFrame];
-			[contentView setFrame:contentFrame];
-		} else if ((windowFrame.size.width == 320.0f) && (windowFrame.size.height == 480.0f)) {
-			CGRect screenBounds = [[UIScreen mainScreen] bounds];
-			windowFrame.size = screenBounds.size;
-			[keyWindow setFrame:windowFrame];
-			if ((contentFrame.size.width == 320.0f) && (contentFrame.size.height == 480.0f))
-				contentFrame.size = screenBounds.size;
-			[contentView setFrame:contentFrame];
+	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
+	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
+	if (value) {
+		CHSuper(0, UIApplication, _reportAppLaunchFinished);
+		UIWindow *keyWindow = [UIWindow keyWindow];
+		UIView *contentView = [keyWindow contentView];
+		if (contentView) {
+			CGRect windowFrame = [keyWindow frame];
+			CGRect contentFrame = [contentView frame];
+			if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
+				windowFrame.size.width = contentFrame.origin.x + contentFrame.size.width;
+				windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
+				[keyWindow setFrame:windowFrame];
+				[contentView setFrame:contentFrame];
+			} else if ((windowFrame.size.width == 320.0f) && (windowFrame.size.height == 480.0f)) {
+				CGRect screenBounds = [[UIScreen mainScreen] bounds];
+				windowFrame.size = screenBounds.size;
+				[keyWindow setFrame:windowFrame];
+				if ((contentFrame.size.width == 320.0f) && (contentFrame.size.height == 480.0f))
+					contentFrame.size = screenBounds.size;
+				[contentView setFrame:contentFrame];
+			}
 		}
+	} else {
+		CHSuper(0, UIApplication, _reportAppLaunchFinished);
 	}
 }
 
