@@ -10,13 +10,13 @@ entry = {
   ALSectionDescriptors = (
   	{
   	  title = "System Applications";
-  	  predicate = "(isSystemApplication = TRUE) AND (isActuallyClassic = TRUE)";
+  	  predicate = "(isSystemApplication = TRUE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
   	},
   	{
   	  title = "User Applications";
-  	  predicate = "(isSystemApplication = FALSE) AND (isActuallyClassic = TRUE)";
+  	  predicate = "(isSystemApplication = FALSE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
   	}
