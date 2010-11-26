@@ -3,7 +3,7 @@ Section: Tweaks
 Maintainer: BigBoss <bigboss@thebigboss.org>
 Architecture: iphoneos-arm
 Version: 1.2
-Depends: firmware (>= 3.2), mobilesubstrate, preferenceloader, applist, gsc.wildcat
+Depends: firmware (>= 3.2), mobilesubstrate, preferenceloader, applist, gsc.wildcat | gsc.ipad
 Description: Force applications to show in iPad mode
 Name: FullForce
 Homepage: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=fullforceData
