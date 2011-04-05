@@ -7,18 +7,32 @@ entry = {
   ALSettingsPath = "/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist";
   ALSettingsKeyPrefix = "FFEnabled-";
   ALChangeNotification = "com.booleanmagic.fullforce.settingschanged";
+  ALAllowsSelection = 1;
   ALSectionDescriptors = (
+  	{
+  	  items = (
+  	    {
+  	      text = "RetinaPad";
+  	      image = "/Library/PreferenceLoader/Preferences/FullForce-RetinaPad.png";
+  	      action = "launchURL";
+  	      url = "cydia://package/com.rpetrich.retinapad";
+  	    }
+  	  );
+  	  "footer-title" = "Get RetinaPad for a better 2× mode. It supports many more apps and games than FullForce by simulating the iPhone 4's Retina Display";
+  	},
   	{
   	  title = "System Applications";
   	  predicate = "(isSystemApplication = TRUE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
+  	  "suppress-hidden-apps" = 1;
   	},
   	{
   	  title = "User Applications";
   	  predicate = "(isSystemApplication = FALSE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
+  	  "suppress-hidden-apps" = 1;
   	}
   );
 };
