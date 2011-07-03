@@ -82,7 +82,7 @@ static FullForcePopoverManager *currentPopoverManager;
 
 CHDeclareClass(SBApplication);
 
-CHMethod(0, BOOL, SBApplication, isClassic)
+CHOptimizedMethod(0, self, BOOL, SBApplication, isClassic)
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
@@ -97,14 +97,14 @@ CHMethod(0, BOOL, SBApplication, isClassic)
 	}
 }
 
-CHMethod(0, BOOL, SBApplication, isActuallyClassic)
+CHOptimizedMethod(0, new, BOOL, SBApplication, isActuallyClassic)
 {
 	return CHSuper(0, SBApplication, isClassic);
 }
 
 CHDeclareClass(UIViewController);
 
-CHMethod(2, void, UIViewController, presentModalViewController, UIViewController *, viewController, animated, BOOL, animated)
+CHOptimizedMethod(2, self, void, UIViewController, presentModalViewController, UIViewController *, viewController, animated, BOOL, animated)
 {
 	if ([viewController isKindOfClass:[UIImagePickerController class]]) {
 		FullForcePopoverManager *ffpm = [[FullForcePopoverManager alloc] initWithViewController:self pickerController:(UIImagePickerController *)viewController];
@@ -115,7 +115,7 @@ CHMethod(2, void, UIViewController, presentModalViewController, UIViewController
 	}
 }
 
-CHMethod(1, void, UIViewController, dismissModalViewControllerAnimated, BOOL, animated)
+CHOptimizedMethod(1, self, void, UIViewController, dismissModalViewControllerAnimated, BOOL, animated)
 {
 	if (currentPopoverManager)
 		[currentPopoverManager dismissAnimated:YES];
@@ -125,14 +125,14 @@ CHMethod(1, void, UIViewController, dismissModalViewControllerAnimated, BOOL, an
 
 CHDeclareClass(UIDevice);
 
-CHMethod(0, UIUserInterfaceIdiom, UIDevice, userInterfaceIdiom)
+CHOptimizedMethod(0, self, UIUserInterfaceIdiom, UIDevice, userInterfaceIdiom)
 {
 	return UIUserInterfaceIdiomPhone;
 }
 
 CHDeclareClass(UIApplication);
 
-CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
+CHOptimizedMethod(0, self, void, UIApplication, _reportAppLaunchFinished)
 {
 	CHSuper(0, UIApplication, _reportAppLaunchFinished);
 	UIWindow *keyWindow = [UIWindow keyWindow];
@@ -156,7 +156,7 @@ CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 	}
 }
 
-CHMethod(5, void, UIApplication, _runWithURL, NSURL *, url, payload, id, payload, launchOrientation, UIInterfaceOrientation, orientation, statusBarStyle, int, style, statusBarHidden, BOOL, hidden)
+CHOptimizedMethod(5, self, void, UIApplication, _runWithURL, NSURL *, url, payload, id, payload, launchOrientation, UIInterfaceOrientation, orientation, statusBarStyle, int, style, statusBarHidden, BOOL, hidden)
 {
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
