@@ -123,9 +123,40 @@ CHMethod(1, void, UIViewController, dismissModalViewControllerAnimated, BOOL, an
 		CHSuper(1, UIViewController, dismissModalViewControllerAnimated, animated);
 }
 
+CHDeclareClass(UIDevice);
+
+CHMethod(0, UIUserInterfaceIdiom, UIDevice, userInterfaceIdiom)
+{
+	return UIUserInterfaceIdiomPhone;
+}
+
 CHDeclareClass(UIApplication);
 
 CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
+{
+	CHSuper(0, UIApplication, _reportAppLaunchFinished);
+	UIWindow *keyWindow = [UIWindow keyWindow];
+	UIView *contentView = [keyWindow contentView];
+	if (contentView) {
+		CGRect windowFrame = [keyWindow frame];
+		CGRect contentFrame = [contentView frame];
+		if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
+			windowFrame.size.width = contentFrame.origin.x + contentFrame.size.width;
+			windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
+			[keyWindow setFrame:windowFrame];
+			[contentView setFrame:contentFrame];
+		} else if ((windowFrame.size.width == 320.0f) && (windowFrame.size.height == 480.0f)) {
+			CGRect screenBounds = [[UIScreen mainScreen] bounds];
+			windowFrame.size = screenBounds.size;
+			[keyWindow setFrame:windowFrame];
+			if ((contentFrame.size.width == 320.0f) && (contentFrame.size.height == 480.0f))
+				contentFrame.size = screenBounds.size;
+			[contentView setFrame:contentFrame];
+		}
+	}
+}
+
+CHMethod(5, void, UIApplication, _runWithURL, NSURL *, url, payload, id, payload, launchOrientation, UIInterfaceOrientation, orientation, statusBarStyle, int, style, statusBarHidden, BOOL, hidden)
 {
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
@@ -134,29 +165,11 @@ CHMethod(0, void, UIApplication, _reportAppLaunchFinished)
 		CHLoadClass(UIViewController);
 		CHHook(2, UIViewController, presentModalViewController, animated);
 		CHHook(1, UIViewController, dismissModalViewControllerAnimated);
-		CHSuper(0, UIApplication, _reportAppLaunchFinished);
-		UIWindow *keyWindow = [UIWindow keyWindow];
-		UIView *contentView = [keyWindow contentView];
-		if (contentView) {
-			CGRect windowFrame = [keyWindow frame];
-			CGRect contentFrame = [contentView frame];
-			if (contentFrame.size.width > windowFrame.size.width || contentFrame.size.height > windowFrame.size.height) {
-				windowFrame.size.width = contentFrame.origin.x + contentFrame.size.width;
-				windowFrame.size.height = contentFrame.origin.y + contentFrame.size.height;
-				[keyWindow setFrame:windowFrame];
-				[contentView setFrame:contentFrame];
-			} else if ((windowFrame.size.width == 320.0f) && (windowFrame.size.height == 480.0f)) {
-				CGRect screenBounds = [[UIScreen mainScreen] bounds];
-				windowFrame.size = screenBounds.size;
-				[keyWindow setFrame:windowFrame];
-				if ((contentFrame.size.width == 320.0f) && (contentFrame.size.height == 480.0f))
-					contentFrame.size = screenBounds.size;
-				[contentView setFrame:contentFrame];
-			}
-		}
-	} else {
-		CHSuper(0, UIApplication, _reportAppLaunchFinished);
+		CHLoadClass(UIDevice);
+		CHHook(0, UIDevice, userInterfaceIdiom);
+		CHHook(0, UIApplication, _reportAppLaunchFinished);
 	}
+	CHSuper(5, UIApplication, _runWithURL, url, payload, payload, launchOrientation, orientation, statusBarStyle, style, statusBarHidden, hidden);
 }
 
 CHConstructor
@@ -165,5 +178,5 @@ CHConstructor
 	CHHook(0, SBApplication, isClassic);
 	CHHook(0, SBApplication, isActuallyClassic);
 	CHLoadClass(UIApplication);
-	CHHook(0, UIApplication, _reportAppLaunchFinished);
+	CHHook(5, UIApplication, _runWithURL, payload, launchOrientation, statusBarStyle, statusBarHidden);
 }
