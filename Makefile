@@ -9,6 +9,9 @@ TWEAK_NAME = FullForce
 FullForce_OBJC_FILES = FullForce.m
 FullForce_FRAMEWORKS = UIKit
 
+OPTFLAG = -Os
+TARGET_IPHONEOS_DEPLOYMENT_VERSION = 3.2
+
 include framework/makefiles/common.mk
 include framework/makefiles/tweak.mk
 

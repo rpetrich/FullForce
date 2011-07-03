@@ -4,25 +4,6 @@
 #import <SpringBoard/SpringBoard.h>
 #import <CaptainHook/CaptainHook.h>
 
-@protocol UIPopoverControllerDelegate;
-
-@interface UIPopoverController : NSObject
-
-- (id)initWithContentViewController:(UIViewController *)viewController;
-
-@property (nonatomic, assign) id <UIPopoverControllerDelegate> delegate;
-
-- (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view permittedArrowDirections:(NSInteger)arrowDirections animated:(BOOL)animated;
-- (void)dismissPopoverAnimated:(BOOL)animated;
-
-@end
-
-@protocol UIPopoverControllerDelegate <NSObject>
-@optional
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController;
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController;
-@end
-
 CHDeclareClass(UIPopoverController);
 
 __attribute__((visibility("hidden")))
