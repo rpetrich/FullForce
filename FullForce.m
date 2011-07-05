@@ -4,7 +4,7 @@
 #import <SpringBoard/SpringBoard.h>
 #import <CaptainHook/CaptainHook.h>
 
-CHDeclareClass(UIPopoverController);
+/*CHDeclareClass(UIPopoverController);
 
 __attribute__((visibility("hidden")))
 @interface FullForcePopoverManager : NSObject<UIPopoverControllerDelegate> {
@@ -78,7 +78,7 @@ static FullForcePopoverManager *currentPopoverManager;
 	currentPopoverManager = nil;
 }
 
-@end
+@end*/
 
 CHDeclareClass(SBApplication);
 
@@ -102,7 +102,7 @@ CHOptimizedMethod(0, new, BOOL, SBApplication, isActuallyClassic)
 	return CHSuper(0, SBApplication, isClassic);
 }
 
-CHDeclareClass(UIViewController);
+/*CHDeclareClass(UIViewController);
 
 CHOptimizedMethod(2, self, void, UIViewController, presentModalViewController, UIViewController *, viewController, animated, BOOL, animated)
 {
@@ -121,7 +121,7 @@ CHOptimizedMethod(1, self, void, UIViewController, dismissModalViewControllerAni
 		[currentPopoverManager dismissAnimated:YES];
 	else
 		CHSuper(1, UIViewController, dismissModalViewControllerAnimated, animated);
-}
+}*/
 
 CHDeclareClass(UIDevice);
 
@@ -161,10 +161,10 @@ CHOptimizedMethod(5, self, void, UIApplication, _runWithURL, NSURL *, url, paylo
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
 	if (value) {
-		CHLoadLateClass(UIPopoverController);
+		/*CHLoadLateClass(UIPopoverController);
 		CHLoadClass(UIViewController);
 		CHHook(2, UIViewController, presentModalViewController, animated);
-		CHHook(1, UIViewController, dismissModalViewControllerAnimated);
+		CHHook(1, UIViewController, dismissModalViewControllerAnimated);*/
 		CHLoadClass(UIDevice);
 		CHHook(0, UIDevice, userInterfaceIdiom);
 		CHHook(0, UIApplication, _reportAppLaunchFinished);
