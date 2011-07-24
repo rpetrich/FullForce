@@ -2,7 +2,7 @@ Package: com.booleanmagic.fullforce
 Section: Tweaks
 Maintainer: BigBoss <bigboss@thebigboss.org>
 Architecture: iphoneos-arm
-Version: 1.3.1
+Version: 1.3.2
 Depends: firmware (>= 3.2), mobilesubstrate, preferenceloader, applist (>= 1.3), cy+model.ipad | gsc.ipad | gsc.wildcat, cydia (>= 1.1.1)
 Description: Force applications to show in iPad mode
 Name: FullForce
