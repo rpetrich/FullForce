@@ -125,9 +125,49 @@ CHOptimizedMethod(1, self, void, UIViewController, dismissModalViewControllerAni
 
 CHDeclareClass(UIDevice);
 
+static NSInteger standardInterfaceIdiom;
+static UIBarButtonItem *currentBarButtonItem;
+
 CHOptimizedMethod(0, self, UIUserInterfaceIdiom, UIDevice, userInterfaceIdiom)
 {
-	return UIUserInterfaceIdiomPhone;
+	return standardInterfaceIdiom ? CHSuper(0, UIDevice, userInterfaceIdiom) : UIUserInterfaceIdiomPhone;
+}
+
+CHDeclareClass(UIActionSheet)
+
+CHOptimizedMethod(1, self, void, UIActionSheet, showInView, UIView *, view)
+{
+	if (currentBarButtonItem)
+		[self showFromBarButtonItem:currentBarButtonItem animated:YES];
+	else {
+		if (!view) {
+			UIWindow *keyWindow = [UIWindow keyWindow];
+			if ([UIWindow respondsToSelector:@selector(rootViewController)])
+				view = [[keyWindow rootViewController] view];
+			if (!view)
+				view = [keyWindow.subviews lastObject];
+		}
+		CHSuper(1, UIActionSheet, showInView, view);
+	}
+}
+
+CHDeclareClass(UIPopoverController);
+
+CHOptimizedMethod(1, self, id, UIPopoverController, initWithContentViewController, UIViewController *, contentViewController)
+{
+	standardInterfaceIdiom++;
+	self = CHSuper(1, UIPopoverController, initWithContentViewController, contentViewController);
+	standardInterfaceIdiom--;
+	return self;
+}
+
+CHDeclareClass(UIBarButtonItem);
+
+CHOptimizedMethod(2, self, void, UIBarButtonItem, _sendAction, id, action, withEvent, UIEvent *, event)
+{
+	currentBarButtonItem = self;
+	CHSuper(2, UIBarButtonItem, _sendAction, action, withEvent, event);
+	currentBarButtonItem = nil;
 }
 
 CHDeclareClass(UIApplication);
@@ -167,6 +207,12 @@ CHOptimizedMethod(5, self, void, UIApplication, _runWithURL, NSURL *, url, paylo
 		CHHook(1, UIViewController, dismissModalViewControllerAnimated);*/
 		CHLoadClass(UIDevice);
 		CHHook(0, UIDevice, userInterfaceIdiom);
+		CHLoadClass(UIActionSheet);
+		CHHook(1, UIActionSheet, showInView);
+		CHLoadClass(UIPopoverController);
+		CHHook(1, UIPopoverController, initWithContentViewController);
+		CHLoadClass(UIBarButtonItem);
+		CHHook(2, UIBarButtonItem, _sendAction, withEvent);
 		CHHook(0, UIApplication, _reportAppLaunchFinished);
 	}
 	CHSuper(5, UIApplication, _runWithURL, url, payload, payload, launchOrientation, orientation, statusBarStyle, style, statusBarHidden, hidden);
