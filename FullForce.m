@@ -201,19 +201,22 @@ CHOptimizedMethod(5, self, void, UIApplication, _runWithURL, NSURL *, url, paylo
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
 	if (value) {
-		/*CHLoadLateClass(UIPopoverController);
-		CHLoadClass(UIViewController);
-		CHHook(2, UIViewController, presentModalViewController, animated);
-		CHHook(1, UIViewController, dismissModalViewControllerAnimated);*/
-		CHLoadClass(UIDevice);
-		CHHook(0, UIDevice, userInterfaceIdiom);
-		CHLoadClass(UIActionSheet);
-		CHHook(1, UIActionSheet, showInView);
-		CHLoadClass(UIPopoverController);
-		CHHook(1, UIPopoverController, initWithContentViewController);
-		CHLoadClass(UIBarButtonItem);
-		CHHook(2, UIBarButtonItem, _sendAction, withEvent);
-		CHHook(0, UIApplication, _reportAppLaunchFinished);
+		NSBundle *bundle = [NSBundle mainBundle];
+		if (![bundle.bundleIdentifier isEqualToString:@"com.facebook.Facebook"] || ([[bundle objectForInfoDictionaryKey:@"CFBundleVersion"] integerValue] < 3440)) {
+			/*CHLoadLateClass(UIPopoverController);
+			CHLoadClass(UIViewController);
+			CHHook(2, UIViewController, presentModalViewController, animated);
+			CHHook(1, UIViewController, dismissModalViewControllerAnimated);*/
+			CHLoadClass(UIDevice);
+			CHHook(0, UIDevice, userInterfaceIdiom);
+			CHLoadClass(UIActionSheet);
+			CHHook(1, UIActionSheet, showInView);
+			CHLoadClass(UIPopoverController);
+			CHHook(1, UIPopoverController, initWithContentViewController);
+			CHLoadClass(UIBarButtonItem);
+			CHHook(2, UIBarButtonItem, _sendAction, withEvent);
+			CHHook(0, UIApplication, _reportAppLaunchFinished);
+		}
 	}
 	CHSuper(5, UIApplication, _runWithURL, url, payload, payload, launchOrientation, orientation, statusBarStyle, style, statusBarHidden, hidden);
 }
