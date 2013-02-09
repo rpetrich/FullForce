@@ -18,7 +18,7 @@ entry = {
   	      url = "cydia://package/com.rpetrich.retinapad";
   	    }
   	  );
-  	  "footer-title" = "Get RetinaPad for a better 2× mode. It supports many more apps and games than FullForce by simulating the iPhone 4's Retina Display";
+  	  "footer-title" = "Get RetinaPad for a better 2× mode. It supports many more apps and games than FullForce by simulating the iPhone's Retina Display";
   	},
   	{
   	  title = "System Applications";
