@@ -81,8 +81,12 @@ static FullForcePopoverManager *currentPopoverManager;
 
 %hook SBApplication
 
+static NSInteger inActuallyClassic;
+
 - (BOOL)isClassic
 {
+	if (inActuallyClassic)
+		return %orig();
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
@@ -99,7 +103,10 @@ static FullForcePopoverManager *currentPopoverManager;
 %new
 - (BOOL)isActuallyClassic
 {
-	return YES;//_logos_orig$_ungrouped$SBApplication$isClassic(self, @selector(isClassic));
+	inActuallyClassic++;
+	BOOL result = [self isClassic];
+	inActuallyClassic--;
+	return result;
 }
 
 %end
