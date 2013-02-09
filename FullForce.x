@@ -221,6 +221,626 @@ static UIBarButtonItem *currentBarButtonItem;
 
 %end
 
+// iOS6's keyboard insanity
+
+%hook UIKeyboardCandidateToggleButton
+- (CGRect)labelFrameFromFrame:(CGRect)frame
+{
+	standardInterfaceIdiom++;
+	CGRect result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardCandidatePocketShadow
+- (void)drawRect:(CGRect)rect
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardEmojiCategoryController
++ (Class)classForCategoryControl
+{
+	standardInterfaceIdiom++;
+	Class result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardEmojiInputController
+- (void)emojiUsed:(id)sender
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
++ (Class)classForInputView
+{
+	standardInterfaceIdiom++;
+	Class result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKBCacheToken
++ (id)tokenTemplateFilledForKey:(id)key style:(int)style size:(CGSize)size
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (id)tokenTemplateForKey:(id)key name:(id)name style:(int)style size:(CGSize)size
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (id)tokenForKey:(id)key style:(int)style state:(int)state clipCorners:(int)clipCorners
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (id)tokenForKey:(id)key style:(int)style state:(int)state
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIDictationView
+- (id)initWithFrame:(CGRect)frame
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)layoutSubviews
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (id)endpointButton
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (UIImage *)endpointButtonImageWithRect:(CGRect)rect pressed:(BOOL)pressed
+{
+	standardInterfaceIdiom++;
+	UIImage *result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (Class)dictationViewClass
+{
+	standardInterfaceIdiom++;
+	Class result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardDicationBackground
+- (id)initWithFrame:(CGRect)frame
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+ - (void)layoutSubviews
+ {
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardDicationBackgroundGradientView
+- (void)drawRect:(CGRect)rect
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (CGRect)_backgroundFillFrame
+{
+	standardInterfaceIdiom++;
+	CGRect result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIDictationController
+- (void)dealloc
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)setState:(int)state
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardLayoutDictation
+- (void)showKeyboardType:(int)keyboardType withAppearance:(int)appearance
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
++ (CGSize)dictationLayoutSize
+{
+	standardInterfaceIdiom++;
+	CGSize result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook NSBundle
++ (NSBundle *)_rivenBundle
+{
+	standardInterfaceIdiom++;
+	NSBundle *result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardEmojiGraphics
++ (CGPoint)padding:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	CGPoint result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (CGPoint)margin:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	CGPoint result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (unsigned char)colCount:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	unsigned char result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (unsigned char)rowCount:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	unsigned char result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (CGSize)emojiSize:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	CGSize result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (id)dividerWithTheme:(void * /*struct UIKBTheme **/)theme
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)initializeThemes
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIInputViewSet
+- (BOOL)_accessorySuppressesShadow
+{
+	standardInterfaceIdiom++;
+	BOOL result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIPeripheralHost
+- (void)peripheralViewMinMaximized:(id)animation finished:(id)something context:(id)context
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)moveToPersistentOffset
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)refreshCorners
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)updateDropShadow
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)showCorners:(BOOL)shouldShow withDuration:(float)duration
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)adjustHostViewForTransitionStartFrame:(id)something
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardCornerView
+- (id)initWithFrame:(CGRect)frame left:(BOOL)isLeft
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardLayoutStar
+- (void)showKeyboardType:(int)keyboardType appearance:(int)appearance orientation:(id)orientation withShift:(BOOL)shifted
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+} 
+- (id)activationIndicatorView
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)showPopupVariantsForKey:(id)key
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardEmojiView
+- (id)createAndInstallKeyPopupView
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)drawRect:(CGRect)rect
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardEmojiScrollView
+- (void)layoutRecents
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)doLayout
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (id)initWithFrame:(CGRect)frame keyboard:(id)keyboard key:(id)key state:(int)state
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UITextEffectsWindow
+- (CGPoint)magnifierScreenPointForPoint:(CGPoint)point targetWindow:(UIWindow *)targetWindow
+{
+	standardInterfaceIdiom++;
+	CGPoint result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+%end
+
+%hook UIKeyboardLayout
+- (id)initWithFrame:(CGRect)frame
+{
+	standardInterfaceIdiom++;
+	self = %orig();
+	standardInterfaceIdiom--;
+	return self;
+}
+- (CGFloat)flickDistance
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardImpl
++ (CGSize)defaultSizeForInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+	standardInterfaceIdiom++;
+	CGSize result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (CGSize)sizeForInterfaceOrientation:(UIInterfaceOrientation)orientation textInputTraits:(id)traits
+{
+	standardInterfaceIdiom++;
+	CGSize result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (UIInterfaceOrientation)interfaceOrientationForSize:(CGSize)size
+{
+	standardInterfaceIdiom++;
+	UIInterfaceOrientation result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
++ (void)refreshRivenStateWithTraits:(id)traits isKeyboard:(BOOL)isKeyboard
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)delayedInit
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (CGFloat)currentPortraitWidth
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (CGFloat)currentPortraitHeight
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (CGFloat)currentLandscapeWidth
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (CGFloat)currentLandscapeHeight
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (id)inputOverlayContainer
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (BOOL)_shouldShowCandidateBar:(BOOL)something
+{
+	standardInterfaceIdiom++;
+	BOOL result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)resizeForKeyplaneSize:(CGSize)size
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)updateLayout
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKeyboardLayoutStar
+- (void)touchDragged:(UITouch *)touch
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)setKeyboardDim:(BOOL)dim
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)touchUp:(UITouch *)touch
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (unsigned int)downActionFlagsForKey:(id)key
+{
+	standardInterfaceIdiom++;
+	unsigned int result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (id)keyHitTest:(CGPoint)point
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (id)keyHitTestForTouchInfo:(id)touchInfo touchStage:(int)touchStage
+{
+	standardInterfaceIdiom++;
+	id result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (BOOL)pointInside:(CGPoint)point forEvent:(GSEventRef)event
+{
+	standardInterfaceIdiom++;
+	BOOL result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (CGFloat)hitBuffer
+{
+	standardInterfaceIdiom++;
+	CGFloat result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (BOOL)backgroundNeedsRedraw
+{
+	standardInterfaceIdiom++;
+	BOOL result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (int)stateForShiftKey:(id)key
+{
+	standardInterfaceIdiom++;
+	int result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)updateBackgroundIfNeeded
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)updateMoreAndInternationalKeys
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)setKeyboardAppearance:(int)appearance
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)installGestureRecognizers
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+%end
+
+%hook UIKBKeyplaneView
+- (void)drawRect:(CGRect)rect
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (int)cornerMaskForKey:(id)key recursive:(BOOL)recursive
+{
+	standardInterfaceIdiom++;
+	int result = %orig();
+	standardInterfaceIdiom--;
+	return result;
+}
+- (void)setState:(int)state forKey:(id)key
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (void)updateDecorationViewsIfNeeded
+{
+	standardInterfaceIdiom++;
+	%orig();
+	standardInterfaceIdiom--;
+}
+- (id)initWithFrame:(CGRect)frame keyboard:(id)keyboard keyplane:(id)keyplane
+{
+	standardInterfaceIdiom++;
+	self = %orig();
+	standardInterfaceIdiom--;
+	return self;
+}
+%end
+
+%hook UIPeripheralHostView
+- (id)initWithFrame:(CGRect)frame
+{
+	standardInterfaceIdiom++;
+	self = %orig();
+	standardInterfaceIdiom--;
+	return self;
+}
+%end
+
 %end
 
 %hook UIApplication
