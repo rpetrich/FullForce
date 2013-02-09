@@ -4,8 +4,7 @@
 #import <SpringBoard/SpringBoard.h>
 #import <CaptainHook/CaptainHook.h>
 
-/*CHDeclareClass(UIPopoverController);
-
+/*
 __attribute__((visibility("hidden")))
 @interface FullForcePopoverManager : NSObject<UIPopoverControllerDelegate> {
 @private
@@ -80,9 +79,9 @@ static FullForcePopoverManager *currentPopoverManager;
 
 @end*/
 
-CHDeclareClass(SBApplication);
+%hook SBApplication
 
-CHOptimizedMethod(0, self, BOOL, SBApplication, isClassic)
+- (BOOL)isClassic
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
@@ -90,52 +89,62 @@ CHOptimizedMethod(0, self, BOOL, SBApplication, isClassic)
 	value &= ![[self tags] containsObject:@"no-fullforce"];
 	[pool drain];
 	if (value) {
-		CHSuper(0, SBApplication, isClassic);
+		%orig();
 		return NO;
 	} else {
-		return CHSuper(0, SBApplication, isClassic);
+		return %orig();
 	}
 }
 
-CHOptimizedMethod(0, new, BOOL, SBApplication, isActuallyClassic)
+%new
+- (BOOL)isActuallyClassic
 {
-	return CHSuper(0, SBApplication, isClassic);
+	return YES;//_logos_orig$_ungrouped$SBApplication$isClassic(self, @selector(isClassic));
 }
 
-/*CHDeclareClass(UIViewController);
+%end
 
-CHOptimizedMethod(2, self, void, UIViewController, presentModalViewController, UIViewController *, viewController, animated, BOOL, animated)
+%group AppHooks
+
+/*
+%hook UIViewController
+
+- (void)presentModalViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
 	if ([viewController isKindOfClass:[UIImagePickerController class]]) {
 		FullForcePopoverManager *ffpm = [[FullForcePopoverManager alloc] initWithViewController:self pickerController:(UIImagePickerController *)viewController];
 		[ffpm show];
 		[ffpm release];
 	} else {
-		CHSuper(2, UIViewController, presentModalViewController, viewController, animated, animated);
+		%orig();
 	}
 }
 
-CHOptimizedMethod(1, self, void, UIViewController, dismissModalViewControllerAnimated, BOOL, animated)
+- (void)dismissModalViewControllerAnimated:(BOOL)animated
 {
 	if (currentPopoverManager)
 		[currentPopoverManager dismissAnimated:YES];
 	else
-		CHSuper(1, UIViewController, dismissModalViewControllerAnimated, animated);
-}*/
+		%orig();
+}
 
-CHDeclareClass(UIDevice);
+%end
+*/
+%hook UIDevice
 
 static NSInteger standardInterfaceIdiom;
 static UIBarButtonItem *currentBarButtonItem;
 
-CHOptimizedMethod(0, self, UIUserInterfaceIdiom, UIDevice, userInterfaceIdiom)
+- (UIUserInterfaceIdiom)userInterfaceIdiom
 {
-	return standardInterfaceIdiom ? CHSuper(0, UIDevice, userInterfaceIdiom) : UIUserInterfaceIdiomPhone;
+	return standardInterfaceIdiom ? %orig() : UIUserInterfaceIdiomPhone;
 }
 
-CHDeclareClass(UIActionSheet)
+%end
 
-CHOptimizedMethod(1, self, void, UIActionSheet, showInView, UIView *, view)
+%hook UIActionSheet
+
+- (void)showInView:(UIView *)view
 {
 	if (currentBarButtonItem)
 		[self showFromBarButtonItem:currentBarButtonItem animated:YES];
@@ -147,34 +156,41 @@ CHOptimizedMethod(1, self, void, UIActionSheet, showInView, UIView *, view)
 			if (!view)
 				view = [keyWindow.subviews lastObject];
 		}
-		CHSuper(1, UIActionSheet, showInView, view);
+		%orig();
 	}
 }
 
-CHDeclareClass(UIPopoverController);
+%end
 
-CHOptimizedMethod(1, self, id, UIPopoverController, initWithContentViewController, UIViewController *, contentViewController)
+
+%hook UIPopoverController
+
+- (id)initWithContentViewController:(UIViewController *)contentViewController
 {
 	standardInterfaceIdiom++;
-	self = CHSuper(1, UIPopoverController, initWithContentViewController, contentViewController);
+	self = %orig();
 	standardInterfaceIdiom--;
 	return self;
 }
 
-CHDeclareClass(UIBarButtonItem);
+%end
 
-CHOptimizedMethod(2, self, void, UIBarButtonItem, _sendAction, id, action, withEvent, UIEvent *, event)
+%hook UIBarButtonItem
+
+- (void)_sendAction:(id)action withEvent:(UIEvent *)event
 {
 	currentBarButtonItem = self;
-	CHSuper(2, UIBarButtonItem, _sendAction, action, withEvent, event);
+	%orig();
 	currentBarButtonItem = nil;
 }
 
-CHDeclareClass(UIApplication);
+%end
 
-CHOptimizedMethod(0, self, void, UIApplication, _reportAppLaunchFinished)
+%hook UIApplication
+
+- (void)_reportAppLaunchFinished
 {
-	CHSuper(0, UIApplication, _reportAppLaunchFinished);
+	%orig();
 	UIWindow *keyWindow = [UIWindow keyWindow];
 	UIView *contentView = [keyWindow contentView];
 	if (contentView) {
@@ -196,33 +212,25 @@ CHOptimizedMethod(0, self, void, UIApplication, _reportAppLaunchFinished)
 	}
 }
 
-CHOptimizedMethod(5, self, void, UIApplication, _runWithURL, NSURL *, url, payload, id, payload, launchOrientation, UIInterfaceOrientation, orientation, statusBarStyle, int, style, statusBarHidden, BOOL, hidden)
+%end
+
+%end
+
+%hook UIApplication
+
+- (void)_runWithURL:(NSURL *)url payload:(id)payload launchOrientation:(UIInterfaceOrientation)orientation statusBarStyle:(int)style statusBarHidden:(BOOL)hidden
 {
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
 	if (value) {
-		/*CHLoadLateClass(UIPopoverController);
-		CHLoadClass(UIViewController);
-		CHHook(2, UIViewController, presentModalViewController, animated);
-		CHHook(1, UIViewController, dismissModalViewControllerAnimated);*/
-		CHLoadClass(UIDevice);
-		CHHook(0, UIDevice, userInterfaceIdiom);
-		CHLoadClass(UIActionSheet);
-		CHHook(1, UIActionSheet, showInView);
-		CHLoadClass(UIPopoverController);
-		CHHook(1, UIPopoverController, initWithContentViewController);
-		CHLoadClass(UIBarButtonItem);
-		CHHook(2, UIBarButtonItem, _sendAction, withEvent);
-		CHHook(0, UIApplication, _reportAppLaunchFinished);
+		%init(AppHooks);
 	}
-	CHSuper(5, UIApplication, _runWithURL, url, payload, payload, launchOrientation, orientation, statusBarStyle, style, statusBarHidden, hidden);
+	%orig();
 }
 
-CHConstructor
+%end
+
+%ctor
 {
-	CHLoadLateClass(SBApplication);
-	CHHook(0, SBApplication, isClassic);
-	CHHook(0, SBApplication, isActuallyClassic);
-	CHLoadClass(UIApplication);
-	CHHook(5, UIApplication, _runWithURL, payload, launchOrientation, statusBarStyle, statusBarHidden);
+	%init();
 }

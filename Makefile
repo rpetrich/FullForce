@@ -6,7 +6,7 @@ all clean package install::
 else
 
 TWEAK_NAME = FullForce
-FullForce_OBJC_FILES = FullForce.m
+FullForce_FILES = FullForce.x
 FullForce_FRAMEWORKS = UIKit
 
 OPTFLAG = -Os
