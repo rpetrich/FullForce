@@ -21,19 +21,12 @@ entry = {
   	  "footer-title" = "Get RetinaPad for a better 2× mode. It supports many more apps and games than FullForce by simulating the iPhone's Retina Display";
   	},
   	{
-  	  title = "System Applications";
-  	  predicate = "(isSystemApplication = TRUE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
+  	  title = "Classic Applications";
+  	  predicate = "(isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
   	  "suppress-hidden-apps" = 1;
-  	},
-  	{
-  	  title = "User Applications";
-  	  predicate = "(isSystemApplication = FALSE) AND (isActuallyClassic = TRUE) AND NOT (tags contains 'no-fullforce')";
-  	  "cell-class-name" = "ALSwitchCell";
-  	  "icon-size" = 29;
-  	  "suppress-hidden-apps" = 1;
-  	  "footer-title" = "© 2010-2014 Ryan Petrich";
+      "footer-title" = "© 2010-2014 Ryan Petrich";
   	}
   );
 };
