@@ -79,6 +79,17 @@ static FullForcePopoverManager *currentPopoverManager;
 
 @end*/
 
+static BOOL supportsApplication(SBApplication *app)
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
+	NSString *displayIdentifier = [app respondsToSelector:@selector(displayIdentifier)] ? [app displayIdentifier] : [app bundleIdentifier];
+	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:displayIdentifier]] boolValue];
+	value &= ![[app tags] containsObject:@"no-fullforce"];
+	[pool drain];
+	return value;
+}
+
 %hook SBApplication
 
 static NSInteger inActuallyClassic;
@@ -87,17 +98,19 @@ static NSInteger inActuallyClassic;
 {
 	if (inActuallyClassic)
 		return %orig();
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
-	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
-	value &= ![[self tags] containsObject:@"no-fullforce"];
-	[pool drain];
-	if (value) {
+	if (supportsApplication(self)) {
 		%orig();
 		return NO;
 	} else {
 		return %orig();
 	}
+}
+
+- (BOOL)supportsApplicationType:(int)type
+{
+	if (inActuallyClassic)
+		return %orig();
+	return %orig() || supportsApplication(self);
 }
 
 %new
