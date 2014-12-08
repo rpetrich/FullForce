@@ -33,7 +33,7 @@ entry = {
   	  "cell-class-name" = "ALSwitchCell";
   	  "icon-size" = 29;
   	  "suppress-hidden-apps" = 1;
-  	  "footer-title" = "© 2010-2011 Ryan Petrich";
+  	  "footer-title" = "© 2010-2014 Ryan Petrich";
   	}
   );
 };
