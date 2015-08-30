@@ -856,15 +856,26 @@ static UIBarButtonItem *currentBarButtonItem;
 
 %end
 
-%hook UIApplication
-
-- (void)_runWithURL:(NSURL *)url payload:(id)payload launchOrientation:(UIInterfaceOrientation)orientation statusBarStyle:(int)style statusBarHidden:(BOOL)hidden
+static void initApp(UIApplication *self)
 {
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.booleanmagic.fullforce.plist"];
 	BOOL value = [[dict objectForKey:[@"FFEnabled-" stringByAppendingString:[self displayIdentifier]]] boolValue];
 	if (value) {
 		%init(AppHooks);
 	}
+}
+
+%hook UIApplication
+
+- (void)_runWithURL:(NSURL *)url payload:(id)payload launchOrientation:(UIInterfaceOrientation)orientation statusBarStyle:(int)style statusBarHidden:(BOOL)hidden
+{
+	initApp(self);
+	%orig();
+}
+
+- (void)_runWithMainScene:(id)mainScene transitionContext:(id)transitionContext completion:(dispatch_block_t)completion
+{
+	initApp(self);
 	%orig();
 }
 
