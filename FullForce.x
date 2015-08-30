@@ -881,6 +881,17 @@ static void initApp(UIApplication *self)
 
 %end
 
+%hook UIDevice
+
+- (BOOL)wa_isDeviceSupported
+{
+	%log();
+	%orig();
+	return YES;
+}
+
+%end
+
 %ctor
 {
 	%init();
