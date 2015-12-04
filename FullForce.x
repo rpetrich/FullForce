@@ -1,8 +1,6 @@
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <UIKit/UIKit2.h>
-#import <SpringBoard/SpringBoard.h>
-#import <CaptainHook/CaptainHook.h>
+
+#import "Headers.h"
 
 /*
 __attribute__((visibility("hidden")))
