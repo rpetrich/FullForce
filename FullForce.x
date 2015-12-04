@@ -120,6 +120,12 @@ static NSInteger inActuallyClassic;
 	return result;
 }
 
+- (BOOL)isMedusaCapable
+{
+	%orig();
+	return YES;
+}
+
 %end
 
 %group AppHooks
